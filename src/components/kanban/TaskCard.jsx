@@ -1,27 +1,45 @@
 import React from 'react'
-import { Trash2 } from 'lucide-react'
+import { Draggable } from '@hello-pangea/dnd'
+import { Trash2, GripVertical } from 'lucide-react'
 import { useKanban } from '../../context/KanbanContext'
 
-const TaskCard = ({ task, columnId }) => {
+const TaskCard = ({ task, index, columnId }) => {
   const { deleteTask } = useKanban()
 
   return (
-    <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-grab hover:shadow-md transition-shadow flex justify-between items-start gap-2">
-      <p className="text-gray-700 text-sm font-medium leading-relaxed wrap-break-word w-full">
-        {task.content}
-      </p>
-      
-      <button 
-        onClick={(e) => {
-          e.stopPropagation()
-          deleteTask(columnId, task.id)
-        }}
-        className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50 shrink-0"
-        aria-label="Delete task"
-      >
-        <Trash2 size={15} />
-      </button>
-    </div>
+    <Draggable draggableId={task.id} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          className={`bg-white border border-slate-200 rounded-md p-3 transition-all ${
+            snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : 'shadow-sm hover:shadow-md'
+          } group`}
+          style={provided.draggableProps.style}
+        >
+          <div className="flex gap-2 items-start">
+            <div 
+              {...provided.dragHandleProps}
+              className="text-slate-400 group-hover:text-slate-600 transition-colors mt-0.5 cursor-grab active:cursor-grabbing"
+            >
+              <GripVertical size={14} />
+            </div>
+            <p className="text-slate-700 text-sm leading-relaxed break-words flex-1 pt-0.5">
+              {task.content}
+            </p>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation()
+                deleteTask(columnId, task.id)
+              }}
+              className="text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        </div>
+      )}
+    </Draggable>
   )
 }
 

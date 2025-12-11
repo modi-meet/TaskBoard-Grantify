@@ -1,16 +1,19 @@
 import React from 'react'
+import { DragDropContext } from '@hello-pangea/dnd'
 import Column from './Column'
 import { useKanban } from '../../context/KanbanContext'
 
 const KanbanBoard = () => {
-  const { columns } = useKanban()
+  const { columns, moveTask } = useKanban()
 
   return (
-    <div className="flex gap-6 overflow-x-auto items-start h-full pb-4 px-2">
-      {columns.map((col) => (
-        <Column key={col.id} column={col} />
-      ))}
-    </div>
+    <DragDropContext onDragEnd={moveTask}>
+      <div className="flex gap-4 overflow-x-auto items-start h-full p-6">
+        {columns.map((col) => (
+          <Column key={col.id} column={col} />
+        ))}
+      </div>
+    </DragDropContext>
   )
 }
 
