@@ -73,6 +73,31 @@ export const KanbanProvider = ({ children }) => {
     }
   }
 
+  const updateTaskContent = async (columnId, taskId, newContent) => {
+    try {
+      previousStateRef.current = JSON.parse(JSON.stringify(columns))
+
+      setColumns(prev => prev.map(col =>
+        col.id === columnId
+          ? {
+              ...col,
+              tasks: col.tasks.map(task =>
+                task.id === taskId ? { ...task, content: newContent } : task
+              )
+            }
+          : col
+      ))
+
+      await api.updateTask(taskId, { content: newContent })
+    } catch (err) {
+      setError(err.message)
+      if (previousStateRef.current) {
+        setColumns(previousStateRef.current)
+      }
+      console.error('Failed to update task:', err)
+    }
+  }
+
   const deleteTask = async (columnId, taskId) => {
     try {
       previousStateRef.current = JSON.parse(JSON.stringify(columns))
@@ -139,7 +164,7 @@ export const KanbanProvider = ({ children }) => {
   }
 
   return (
-    <KanbanContext.Provider value={{ columns, addTask, deleteTask, moveTask, loading, error, loadTasks }}>
+    <KanbanContext.Provider value={{ columns, addTask, deleteTask, updateTaskContent, moveTask, loading, error, loadTasks }}>
       {children}
     </KanbanContext.Provider>
   )

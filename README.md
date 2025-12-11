@@ -1,13 +1,15 @@
 # Task Board
 
-A minimal, elegant, and performant Kanban board application built with modern web technologies. For users who value clean UI and efficient task management.
+A minimal, elegant, and performant Kanban board application built with the MERN stack (MongoDB, Express, React, Node.js). For users who value clean UI, efficient task management, and robust architecture.
 
 ## Features
 
-- **Drag & Drop Interface** – Smooth, intuitive task movement across columns with visual feedback
-- **Persistent Storage** – Debounced localStorage saves ensure data persists across sessions
-- **Minimal & Professional UI** – Clean minimal UI
-- **Empty State Handling** – Clear messaging when columns are empty
+- **Full Stack Architecture** – Complete MERN stack implementation with RESTful API
+- **Complete Task Management** – Create, read, update, and delete tasks with a clean interface
+- **Drag & Drop Interface** – Smooth, intuitive task movement across columns using `@hello-pangea/dnd`
+- **Persistent Storage** – MongoDB database ensures secure and scalable data persistence
+- **Service Layer Pattern** – Decoupled API logic for better maintainability and testing
+- **Minimal & Professional UI** – Clean, distraction-free interface built with Tailwind CSS
 
 ## Architecture & Workflow
 
@@ -23,10 +25,6 @@ A minimal, elegant, and performant Kanban board application built with modern we
     │ (Layout)              │ (Navigation) │
     └────┬───────┘          └──────────────┘
          │
-    ┌────────────────────────────────────┐
-    │    DragDropContext (@hello-pangea) │
-    └────┬───────────────────────────────┘
-         │
     ┌────┴─────────┬──────────────┬──────────────┐
     │              │              │              │
 ┌───▼───┐   ┌────▼────┐   ┌─────▼─────┐  ┌────▼────┐
@@ -39,121 +37,145 @@ A minimal, elegant, and performant Kanban board application built with modern we
     │    ▼                                     │
     │ ┌─────────────────────────┐              │
     │ │  KanbanContext (State)  │              │
-    │ │ • columns[]             │              │
-    │ │ • addTask()             │              │
-    │ │ • deleteTask()          │              │
-    │ │ • moveTask()            │              │
+    │ │ • Optimistic Updates    │              │
+    │ │ • Error Rollback        │              │
     │ └────┬────────────────────┘              │
     │      │                                   │
-    │      ├───────► localStorage              │
-    │      │         (Persisted)               │
+    │      ▼                                   │
+    │ ┌─────────────────────────┐              │
+    │ │    Service Layer        │              │
+    │ │   (src/services/api.js) │              │
+    │ └────┬────────────────────┘              │
     │      │                                   │
-    │      └─────────────────────────────────► │
-    │                                          │
+    │      ▼                                   │
+    │ ┌─────────────────────────┐              │
+    │ │      REST API           │              │
+    │ │   (Node/Express)        │              │
+    │ └────┬────────────────────┘              │
+    │      │                                   │
+    │      ▼                                   │
+    │    MongoDB                               │
+    │   (Database)                             │
     └──────────────────────────────────────────┘
 ```
 
 ### Data Flow
 
-1. **User Action** – Add/Delete/Move task
-2. **State Update** – Functional setState ensures closure safety
-3. **Context Propagation** – Changes reflected in all child components
-4. **Debounced Save** – After 500ms of inactivity, data persists to localStorage
-5. **UI Re-render** – Components update with new state
+1. **User Action** – User drags a task, edits content, adds a new item, or deletes.
+2. **Optimistic Update** – UI updates immediately via `KanbanContext` before server response.
+3. **Service Call** – `api.js` sends asynchronous request to the backend.
+4. **Server Processing** – Express controller validates and updates MongoDB.
+5. **Confirmation/Rollback** – If successful, state is confirmed. If failed, UI reverts to previous state.
 
 ## Tech Stack
 
 | Category | Technology
 |----------|-----------
-| **Framework** | React 
-| **Build Tool** | Vite
-| **Styling** | Tailwind CSS
+| **Frontend** | React 19, Vite, Tailwind CSS v4
+| **Backend** | Node.js, Express.js
+| **Database** | MongoDB, Mongoose
+| **State Management** | React Context API
 | **Drag & Drop** | @hello-pangea/dnd
 | **Icons** | Lucide React
 
-## 📦 Installation & Setup
+## Installation & Setup
 
+### Prerequisites
+- Node.js (v14+)
+- MongoDB (Local or Atlas URI)
 
-### Clone & Install
-
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/modi-meet/TaskBoard-Grantify.git
 cd TaskBoard-Grantify
-npm install
 ```
 
-### Development Server
+### 2. Setup Backend
+```bash
+cd server
+npm install
+```
+Create a `.env` file in the `server` directory:
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+```
+Start the server:
+```bash
+npm start
+```
 
+### 3. Setup Frontend
+Open a new terminal in the root directory:
+```bash
+npm install
+```
+Create a `.env.local` file in the root directory:
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+Start the frontend:
 ```bash
 npm run dev
 ```
 
 The app will be available at `http://localhost:5173`
 
-### Build for Production
-
-```bash
-npm run build
-```
-
-
 ## Project Structure
 
 ```
-src/
-├── App.jsx                    # Main app component
-├── main.jsx                   # React entry point
-├── index.css                  # Global styles + Tailwind
-├── components/
-│   └── kanban/
-│       ├── KanbanBoard.jsx   # Board layout & DragDropContext
-│       ├── Column.jsx        # Column container with add task form
-│       └── TaskCard.jsx      # Individual task card with delete
-├── context/
-│   └── KanbanContext.jsx     # Global state management
-├── hooks/                     # (Extensible for custom hooks)
-└── utils/                     # (Extensible for utilities)
+├── public/
+├── server/
+│   ├── config/        # Database configuration
+│   ├── controllers/   # Request handlers
+│   ├── models/        # Mongoose schemas
+│   ├── routes/        # API route definitions
+│   └── index.js       # Server entry point
+├── src/
+│   ├── components/    # React components
+│   ├── context/       # Global state (KanbanContext)
+│   ├── services/      # API Service Layer
+│   ├── App.jsx        # Main application component
+│   └── main.jsx       # Entry point
+└── ...config files
 ```
 
-##  Key Implementation Highlights
+## Key Implementation Highlights
 
-### 1. **Functional State Updates**
-All state mutations use functional `setColumns(prev => ...)` to avoid stale closure bugs:
-
+### 1. Service Layer Pattern
+API calls are abstracted into `src/services/api.js`, keeping components clean and separating concerns.
 ```javascript
-const addTask = (columnId, content) => {
-  const newTask = { id: Date.now().toString(), content }
-  setColumns(prev => prev.map(col => 
-    col.id === columnId ? { ...col, tasks: [...col.tasks, newTask] } : col
-  ))
-}
+// src/services/api.js
+export const getTasks = async () => { /* ... */ }
+export const createTask = async (content, columnId) => { /* ... */ }
+export const updateTask = async (taskId, updates) => { /* ... */ }
+export const deleteTask = async (taskId) => { /* ... */ }
 ```
 
-### 2. **Drag & Drop Integration**
-Uses `@hello-pangea/dnd` (maintained fork of react-beautiful-dnd) for smooth, accessible drag operations with visual feedback.
+### 2. Optimistic UI Updates
+The UI updates instantly for a snappy user experience, while the backend processes the request in the background.
+```javascript
+// KanbanContext.jsx
+const updateTaskContent = (columnId, taskId, newContent) => {
+  // 1. Optimistically update state
+  setColumns(prev => ...);
+  
+  // 2. Perform API call
+  api.updateTask(taskId, ...).catch(err => {
+    // 3. Rollback on error
+    setColumns(previousState);
+    setError("Failed to update task");
+  });
+};
+```
 
-##  Code Quality
-
-- ✅ **No Prop Drilling** – Context API handles global state
-- ✅ **Error Handling** – Try/catch blocks for localStorage operations
-- ✅ **Industry Standards** – Follows React hooks best practices
-
-##  Design Philosophy
-
-This board prioritizes:
-- **Minimalism** – Only essential UI elements
-- **Clarity** – Clear visual hierarchy and information architecture
-- **Performance** – No unnecessary re-renders or heavy libraries
-
-##  Future Enhancements
-
-Potential features for expansion:
-- [ ] A CRUD API (using Node.js, Express, etc) to store tasks in a database (e.g., MongoDB)
-- [ ] Deploy the app
+### 3. Edit Task Functionality
+Click the pencil icon on any task to inline-edit its content. Use `Enter` to save or `Escape` to cancel.
+- Supports multi-line task descriptions
+- Real-time validation and API sync
+- Automatic rollback on network errors
 
 ## Contributing
-
-While this is a showcase project, improvements are always welcome. Please:
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
@@ -168,19 +190,6 @@ While this is a showcase project, improvements are always welcome. Please:
 - [GitHub](https://github.com/modi-meet)
 - [LinkedIn](https://www.linkedin.com/in/modi-meet-profile)
 - [Email](mailto:mail.modimeet@gmail.com)
-
----
-
-## Quick Start (TL;DR)
-
-```bash
-git clone https://github.com/modi-meet/TaskBoard-Grantify.git
-cd TaskBoard-Grantify
-npm install
-npm run dev
-```
-
-Open `http://localhost:5173` and start managing tasks!
 
 ---
 
