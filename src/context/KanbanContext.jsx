@@ -7,7 +7,7 @@ export const useKanban = () => useContext(KanbanContext)
 
 export const KanbanProvider = ({ children }) => {
   const [columns, setColumns] = useState([
-    { id: 'todo', title: 'To Do', tasks: [] },
+    { id: 'todo', title: 'Work Assigned', tasks: [] },
     { id: 'inprogress', title: 'In Progress', tasks: [] },
     { id: 'done', title: 'Done', tasks: [] }
   ])
@@ -34,7 +34,8 @@ export const KanbanProvider = ({ children }) => {
         ...col,
         tasks: tasks.filter(task => task.columnId === col.id).map(task => ({
           id: task._id,
-          content: task.content
+          content: task.content,
+          createdAt: task.createdAt
         }))
       })))
     } catch (err) {
@@ -47,7 +48,7 @@ export const KanbanProvider = ({ children }) => {
 
   const addTask = async (columnId, content) => {
     try {
-      const optimisticTask = { id: Date.now().toString(), content }
+      const optimisticTask = { id: Date.now().toString(), content, createdAt: new Date().toISOString() }
       setColumns(prev => prev.map(col =>
         col.id === columnId ? { ...col, tasks: [...col.tasks, optimisticTask] } : col
       ))
@@ -61,7 +62,7 @@ export const KanbanProvider = ({ children }) => {
               ...col,
               tasks: col.tasks.map(task =>
                 task.id === optimisticTask.id
-                  ? { id: createdTask._id, content: createdTask.content }
+                  ? { id: createdTask._id, content: createdTask.content, createdAt: createdTask.createdAt }
                   : task
               )
             }

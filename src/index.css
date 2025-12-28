@@ -1,30 +1,42 @@
 @import "tailwindcss";
 
-/* scrollbar styling */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: transparent;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  background: linear-gradient(180deg, #94a3b8, #64748b);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: linear-gradient(180deg, #64748b, #475569);
+  background-clip: content-box;
 }
 
-/* transitions */
 * {
-  @apply transition-colors duration-200 ease-out;
+  @apply transition-colors duration-150 ease-out;
 }
 
 button, a {
   @apply transition-all duration-200;
 }
 
+button:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+  @apply outline-none ring-2 ring-blue-400 ring-offset-2;
+}
+
+::selection {
+  background: #3b82f6;
+  color: white;
+}

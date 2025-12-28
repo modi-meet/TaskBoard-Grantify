@@ -8,10 +8,12 @@ const KanbanBoard = () => {
 
   return (
     <DragDropContext onDragEnd={moveTask}>
-      <div className="flex gap-4 overflow-x-auto items-start h-full p-6">
-        {columns.map((col) => (
-          <Column key={col.id} column={col} />
-        ))}
+      <div className="w-full h-full px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-center gap-6 items-start h-full pb-4">
+          {columns.map((col, index) => (
+            <Column key={col.id} column={col} colorIndex={index} />
+          ))}
+        </div>
       </div>
     </DragDropContext>
   )
