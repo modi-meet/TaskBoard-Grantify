@@ -1,62 +1,66 @@
-# Task Board
+# AgileFlow - Workflow Management system
 
 A minimal, elegant, and performant Kanban board application built with the MERN stack (MongoDB, Express, React, Node.js). For users who value clean UI, efficient task management, and robust architecture.
+
+Live deployment - https://task-board-kanban-one.vercel.app/
 
 ## Features
 
 - **Full Stack Architecture** – Complete MERN stack implementation with RESTful API
 - **Complete Task Management** – Create, read, update, and delete tasks with a clean interface
 - **Drag & Drop Interface** – Smooth, intuitive task movement across columns using `@hello-pangea/dnd`
+- **Timeline View** – Visual sprint progress tracking with task timeline
 - **Persistent Storage** – MongoDB database ensures secure and scalable data persistence
 - **Service Layer Pattern** – Decoupled API logic for better maintainability and testing
+- **Reusable Components** – Modular Navbar and Footer components for consistent UI
 - **Minimal & Professional UI** – Clean, distraction-free interface built with Tailwind CSS
 
 ## Architecture & Workflow
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                          Task Board App                          │
+│                          AgileFlow App                          │
 └────────────────────┬────────────────────────────────────────────┘
                      │
          ┌───────────┴───────────┐
          │                       │
     ┌────▼───────┐          ┌──────▼───────┐
-    │ KanbanBoard           │ App Header   │
-    │ (Layout)              │ (Navigation) │
+    │ KanbanBoard│          │    Navbar    │
+    │ (Layout)   │          │ (Navigation) │
     └────┬───────┘          └──────────────┘
          │
     ┌────┴─────────┬──────────────┬──────────────┐
     │              │              │              │
-┌───▼───┐   ┌────▼────┐   ┌─────▼─────┐  ┌────▼────┐
-│ Column│   │ Column  │   │ Column    │  │ Column  │
-│(To Do)│   │(In Prog)│   │  (Done)   │  │ ...     │
-└───┬───┘   └────┬────┘   └─────┬─────┘  └────┬────┘
-    │            │              │             │
-    │    ┌───────┴──────────────┴─────────────┤
-    │    │                                     │
-    │    ▼                                     │
-    │ ┌─────────────────────────┐              │
-    │ │  KanbanContext (State)  │              │
-    │ │ • Optimistic Updates    │              │
-    │ │ • Error Rollback        │              │
-    │ └────┬────────────────────┘              │
-    │      │                                   │
-    │      ▼                                   │
-    │ ┌─────────────────────────┐              │
-    │ │    Service Layer        │              │
-    │ │   (src/services/api.js) │              │
-    │ └────┬────────────────────┘              │
-    │      │                                   │
-    │      ▼                                   │
-    │ ┌─────────────────────────┐              │
-    │ │      REST API           │              │
-    │ │   (Node/Express)        │              │
-    │ └────┬────────────────────┘              │
-    │      │                                   │
-    │      ▼                                   │
-    │    MongoDB                               │
-    │   (Database)                             │
-    └──────────────────────────────────────────┘
+┌───▼──────┐   ┌────▼────┐   ┌─────▼─────┐  ┌────▼────┐
+│ Column   │   │ Column  │   │ Column    │  │ Column  │
+│(assigned)│   │(In Prog)│   │(Completed)   │ │ ... | │
+└───┬──────┘   └────┬────┘   └─────┬─────┘  └────┬────┘
+    │               │              │             │
+    │    ┌──────────┴──────────────┴─────────────┤
+    │    │                                       │
+    │    ▼                                       │
+    │ ┌─────────────────────────┐                │
+    │ │  KanbanContext (State)  │                │
+    │ │ • Optimistic Updates    │                │
+    │ │ • Error Rollback        │                │
+    │ └────┬────────────────────┘                │
+    │      │                                     │
+    │      ▼                                     │
+    │ ┌─────────────────────────┐                │
+    │ │    Service Layer        │                │
+    │ │   (src/services/api.js) │                │
+    │ └────┬────────────────────┘                │
+    │      │                                     │
+    │      ▼                                     │
+    │ ┌─────────────────────────┐                │
+    │ │      REST API           │                │
+    │ │   (Node/Express)        │                │
+    │ └────┬────────────────────┘                │
+    │      │                                     │
+    │      ▼                                     │
+    │    MongoDB                                 │
+    │   (Database)                               │
+    └────────────────────────────────────────────┘
 ```
 
 ### Data Flow
@@ -86,8 +90,8 @@ A minimal, elegant, and performant Kanban board application built with the MERN 
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/modi-meet/TaskBoard-Grantify.git
-cd TaskBoard-Grantify
+git clone https://github.com/modi-meet/AgileFlow-Kanban-Board.git
+cd AgileFlow-Kanban-Board
 ```
 
 ### 2. Setup Backend
@@ -132,9 +136,11 @@ The app will be available at `http://localhost:5173`
 │   ├── routes/        # API route definitions
 │   └── index.js       # Server entry point
 ├── src/
-│   ├── components/    # React components
+│   ├── components/    # React components (Navbar, Footer, kanban/)
 │   ├── context/       # Global state (KanbanContext)
+│   ├── pages/         # Page views (Timeline, Team)
 │   ├── services/      # API Service Layer
+│   ├── utils/         # Utility functions
 │   ├── App.jsx        # Main application component
 │   └── main.jsx       # Entry point
 └── ...config files
