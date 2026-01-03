@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Handle SPA routing - redirect all non-file requests to index.html
+# Note: The function config already handles /api/tasks routes, so they won't reach this
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

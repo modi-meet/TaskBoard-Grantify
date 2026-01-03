@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+// In production on Netlify, use relative path since functions are on the same domain
+// For local development with netlify dev, relative paths also work
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
 export const getTasks = async () => {
   try {
