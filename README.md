@@ -2,7 +2,7 @@
 
 A minimal, elegant, and performant Kanban board application built with the MERN stack (MongoDB, Express, React, Node.js). For users who value clean UI, efficient task management, and robust architecture.
 
-Live deployment - https://task-board-kanban-one.vercel.app/
+Live deployment - https://agileflow-system.netlify.app/
 
 ## Features
 
