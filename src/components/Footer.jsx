@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="border-t border-slate-200/60 bg-white/50 backdrop-blur-sm py-3 px-6">
       <div className="max-w-7xl mx-auto flex items-center justify-between text-xs text-slate-400">
-        <span>© 2025 AgileFlow • Built for modern teams</span>
+        <span>© {new Date().getFullYear()} AgileFlow • Built for modern teams</span>
         <div className="flex items-center gap-4">
           <a 
             href="https://github.com/modi-meet/AgileFlow-Kanban-Board" 
