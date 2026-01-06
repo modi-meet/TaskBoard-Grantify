@@ -1,0 +1,16 @@
+name: Keep Render Backend Awake
+
+on:
+  schedule:
+    # Runs every 14 minutes from 9:15 AM – 10:30 PM IST
+    - cron: "*/14 3-17 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send request to backend
+        run: |
+          curl -s https://taskboard-grantify-api.onrender.com/ || echo "Ping failed"
