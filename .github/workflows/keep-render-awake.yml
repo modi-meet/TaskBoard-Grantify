@@ -13,4 +13,4 @@ jobs:
     steps:
       - name: Send request to backend
         run: |
-          curl -s https://taskboard-grantify-api.onrender.com/ || echo "Ping failed"
+          curl -s https://taskboard-grantify-api.onrender.com/health || echo "Ping failed"
